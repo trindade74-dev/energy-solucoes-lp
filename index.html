@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Energy Soluções — Energia Solar no Entorno Sul do DF</title>
+    <meta
+      name="description"
+      content="Projetos de energia solar residencial, comercial e rural em Cidade Ocidental e Entorno Sul do DF. Simulação gratuita: descubra quanto você pode economizar na conta de luz."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Aplica o tema salvo ANTES da página pintar, para não piscar de claro -> escuro -->
+    <script>
+      try {
+        if (localStorage.getItem('energy-theme') === 'dark') {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      } catch (e) {}
+    </script>
+
+    <!-- Fontes: Plus Jakarta Sans (display), Inter (texto), Space Grotesk (números) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&family=Space+Grotesk:wght@600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+    <!-- ====================================================================
+         BIBLIOTECA DE SÍMBOLOS SVG (reutilizados via <use href="#...">)
+         ==================================================================== -->
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+      <defs>
+        <!-- Sol do logo: 8 pétalas em pinwheel. As cores vêm das variáveis
+             CSS --petal-a / --petal-b, então cada contexto pode recolorir. -->
+        <symbol id="sym-sun" viewBox="-32 -32 64 64">
+          <circle r="7" fill="var(--petal-a, #F15A29)" />
+          <g fill="var(--petal-a, #F15A29)">
+            <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z" />
+            <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z" transform="rotate(90)" />
+            <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z" transform="rotate(180)" />
+            <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z" transform="rotate(270)" />
+          </g>
+          <g fill="var(--petal-b, #F5A623)">
+            <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z" transform="rotate(45)" />
+            <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z" transform="rotate(135)" />
+            <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z" transform="rotate(225)" />
+            <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z" transform="rotate(315)" />
+          </g>
+        </symbol>
+
+        <!-- Lua (modo noite) -->
+        <symbol id="sym-moon" viewBox="0 0 24 24">
+          <path
+            d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linejoin="round"
+          />
+        </symbol>
+
+        <!-- Sol simples (ícone do toggle) -->
+        <symbol id="sym-sun-icon" viewBox="0 0 24 24">
+          <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" />
+          </g>
+        </symbol>
+
+        <!-- Casa (perfil residencial) -->
+        <symbol id="sym-house" viewBox="0 0 24 24">
+          <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+            <path d="M3 11.5 12 4l9 7.5" />
+            <path d="M5.5 10v9.5h13V10" />
+            <path d="M10 19.5v-5h4v5" />
+          </g>
+        </symbol>
+
+        <!-- Prédio/loja (perfil comercial) -->
+        <symbol id="sym-store" viewBox="0 0 24 24">
+          <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+            <path d="M4 9h16l-1.5-5h-13L4 9Z" />
+            <path d="M5 9v11h14V9" />
+            <path d="M9.5 20v-6h5v6" />
+          </g>
+        </symbol>
+
+        <!-- Campo/rural -->
+        <symbol id="sym-farm" viewBox="0 0 24 24">
+          <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 20h18" />
+            <path d="M5 20v-8l5-4 5 4v8" />
+            <circle cx="18.5" cy="16.5" r="2.5" />
+            <path d="M18.5 12.5v-2m0 9v1" />
+          </g>
+        </symbol>
+
+        <!-- Lupa (etapa Análise) -->
+        <symbol id="sym-search" viewBox="0 0 24 24">
+          <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.8-3.8" />
+          </g>
+        </symbol>
+
+        <!-- Lápis/desenho (etapa Projeto) -->
+        <symbol id="sym-draft" viewBox="0 0 24 24">
+          <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m4 17 13-13 3 3-13 13-4 1 1-4Z" />
+            <path d="m13.5 7.5 3 3" />
+          </g>
+        </symbol>
+
+        <!-- Ferramenta (etapa Instalação) -->
+        <symbol id="sym-tool" viewBox="0 0 24 24">
+          <path
+            d="M14.7 6.3a4.5 4.5 0 0 0-6 5.4L3 17.4V21h3.6l5.7-5.7a4.5 4.5 0 0 0 5.4-6L14.6 12l-2.6-2.6 2.7-3.1Z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linejoin="round"
+          />
+        </symbol>
+
+        <!-- Gráfico (etapa Monitoramento) -->
+        <symbol id="sym-chart" viewBox="0 0 24 24">
+          <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4v16h16" />
+            <path d="m7 14 4-4 3 3 5-6" />
+          </g>
+        </symbol>
+
+        <!-- WhatsApp -->
+        <symbol id="sym-whatsapp" viewBox="0 0 24 24">
+          <path
+            fill="currentColor"
+            d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 2a8 8 0 1 1-4.2 14.8l-.3-.2-2.5.7.7-2.4-.2-.3A8 8 0 0 1 12 4Zm-3 4.2c-.2 0-.5 0-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.2.2 1.8 2.9 4.5 3.9 2.2.9 2.7.7 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2l-.5-.3-1.9-.9c-.3-.1-.4-.2-.6.1l-.8 1c-.2.2-.3.2-.6.1a6.5 6.5 0 0 1-3.3-2.9c-.2-.4 0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6v-.5L10 8.7c-.2-.4-.4-.5-.6-.5h-.5Z"
+          />
+        </symbol>
+
+        <!-- Instagram -->
+        <symbol id="sym-instagram" viewBox="0 0 24 24">
+          <g fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="3" width="18" height="18" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" stroke="none" />
+          </g>
+        </symbol>
+
+        <!-- Check -->
+        <symbol id="sym-check" viewBox="0 0 24 24">
+          <path d="m4.5 12.5 5 5L20 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <!-- ====================================================================
+         HEADER STICKY
+         ==================================================================== -->
+    <header class="header" id="header">
+      <div class="container header__inner">
+        <a class="logo" href="#inicio" aria-label="Energy Soluções — voltar ao início">
+          <svg class="logo__mark" aria-hidden="true"><use href="#sym-sun" /></svg>
+          <span class="logo__text">Energy<small>Soluções</small></span>
+        </a>
+
+        <div class="header__actions">
+          <!-- Toggle dia/noite — também é o easter egg principal da página -->
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Ativar modo noite">
+            <svg class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="#sym-moon" /></svg>
+            <svg class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="#sym-sun-icon" /></svg>
+          </button>
+          <a class="btn btn--primary btn--sm" href="#simulacao">Simulação gratuita</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="conteudo">
+      <!-- ==================================================================
+           1. HERO — cena dia/noite em camadas (parallax)
+           ================================================================== -->
+      <section class="hero" id="inicio">
+        <div class="hero__scene" id="hero-scene" aria-hidden="true">
+          <!-- Camada: estrelas (visíveis só no modo noite) -->
+          <div class="hero__layer hero__layer--stars" data-parallax="0.12">
+            <svg id="hero-stars" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMin slice">
+              <g class="stars">
+                <circle class="star" cx="120" cy="90" r="1.6" style="--tw: 2.4s" />
+                <circle class="star" cx="260" cy="180" r="1.2" style="--tw: 3.1s" />
+                <circle class="star" cx="390" cy="60" r="1.8" style="--tw: 2.8s" />
+                <circle class="star" cx="520" cy="220" r="1.1" style="--tw: 3.6s" />
+                <circle class="star" cx="640" cy="110" r="1.5" style="--tw: 2.2s" />
+                <circle class="star" cx="760" cy="40" r="1.3" style="--tw: 3.4s" />
+                <circle class="star" cx="880" cy="190" r="1.7" style="--tw: 2.6s" />
+                <circle class="star" cx="990" cy="80" r="1.2" style="--tw: 3s" />
+                <circle class="star" cx="1120" cy="150" r="1.6" style="--tw: 2.9s" />
+                <circle class="star" cx="1240" cy="60" r="1.3" style="--tw: 3.3s" />
+                <circle class="star" cx="1350" cy="200" r="1.5" style="--tw: 2.5s" />
+                <circle class="star" cx="180" cy="300" r="1.1" style="--tw: 3.7s" />
+                <circle class="star" cx="450" cy="340" r="1.4" style="--tw: 2.7s" />
+                <circle class="star" cx="700" cy="290" r="1.2" style="--tw: 3.2s" />
+                <circle class="star" cx="950" cy="320" r="1.5" style="--tw: 2.3s" />
+                <circle class="star" cx="1200" cy="280" r="1.2" style="--tw: 3.5s" />
+                <circle class="star" cx="80" cy="420" r="1.3" style="--tw: 2.9s" />
+                <circle class="star" cx="1380" cy="380" r="1.4" style="--tw: 3.1s" />
+              </g>
+            </svg>
+          </div>
+
+          <!-- Camada: sol interativo (vira lua à noite) -->
+          <div class="hero__layer hero__layer--sun" data-parallax="0.25">
+            <button class="hero-sun" id="hero-sun" type="button" tabindex="-1" aria-hidden="true">
+              <span class="hero-sun__glow"></span>
+              <!-- Orbe solar minimalista — gradiente + anéis de corona, sem raios girando -->
+              <svg class="hero-sun__svg hero-sun__svg--sun" id="hero-sun-rays" viewBox="0 0 100 100">
+                <defs>
+                  <radialGradient id="grad-sun-core" cx="50%" cy="44%" r="50%">
+                    <stop offset="0%"   stop-color="#fffbe8" />
+                    <stop offset="28%"  stop-color="#f7d060" />
+                    <stop offset="62%"  stop-color="#f5a623" />
+                    <stop offset="100%" stop-color="#f15a29" stop-opacity="0" />
+                  </radialGradient>
+                  <radialGradient id="grad-sun-halo" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%"   stop-color="#f6cc5a" stop-opacity="0.55" />
+                    <stop offset="65%"  stop-color="#f5a623" stop-opacity="0.08" />
+                    <stop offset="100%" stop-color="#f15a29" stop-opacity="0" />
+                  </radialGradient>
+                </defs>
+                <circle cx="50" cy="50" r="49" fill="url(#grad-sun-halo)" />
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#f5c842" stroke-width="0.7" opacity="0.2" />
+                <circle cx="50" cy="50" r="36" fill="none" stroke="#f5c842" stroke-width="0.5" opacity="0.28" />
+                <circle cx="50" cy="50" r="29" fill="url(#grad-sun-core)" />
+              </svg>
+              <svg class="hero-sun__svg hero-sun__svg--moon">
+                <use href="#sym-moon" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Camada: cena — array de painéis solares (moderno, geométrico) -->
+          <div class="hero__layer hero__layer--horizon" data-parallax="0.5">
+            <svg viewBox="0 0 1440 460" preserveAspectRatio="xMidYMax slice">
+              <defs>
+                <!-- Grade interna dos painéis (células fotovoltaicas) -->
+                <pattern id="panel-cells" x="0" y="0" width="44" height="24.7" patternUnits="userSpaceOnUse">
+                  <rect width="44" height="24.7" fill="none" stroke="var(--panel-line)" stroke-width="0.9" />
+                </pattern>
+              </defs>
+
+              <!-- Plano de chão -->
+              <rect class="ground" x="0" y="398" width="1440" height="62" />
+
+              <!-- Array de painéis solares 3×3 — leve rotação para dar perspectiva -->
+              <g class="panel-array" transform="translate(555 178) rotate(-4 215 135)">
+                <rect class="solar-panel" x="0"   y="0"   width="132" height="74" rx="4" />
+                <rect class="solar-panel" x="146" y="0"   width="132" height="74" rx="4" />
+                <rect class="solar-panel" x="292" y="0"   width="132" height="74" rx="4" />
+                <rect class="solar-panel" x="0"   y="88"  width="132" height="74" rx="4" />
+                <rect class="solar-panel" x="146" y="88"  width="132" height="74" rx="4" />
+                <rect class="solar-panel" x="292" y="88"  width="132" height="74" rx="4" />
+                <rect class="solar-panel" x="0"   y="176" width="132" height="74" rx="4" />
+                <rect class="solar-panel" x="146" y="176" width="132" height="74" rx="4" />
+                <rect class="solar-panel" x="292" y="176" width="132" height="74" rx="4" />
+                <!-- Células FV sobre cada painel -->
+                <rect x="0"   y="0"   width="132" height="74" fill="url(#panel-cells)" rx="4" />
+                <rect x="146" y="0"   width="132" height="74" fill="url(#panel-cells)" rx="4" />
+                <rect x="292" y="0"   width="132" height="74" fill="url(#panel-cells)" rx="4" />
+                <rect x="0"   y="88"  width="132" height="74" fill="url(#panel-cells)" rx="4" />
+                <rect x="146" y="88"  width="132" height="74" fill="url(#panel-cells)" rx="4" />
+                <rect x="292" y="88"  width="132" height="74" fill="url(#panel-cells)" rx="4" />
+                <rect x="0"   y="176" width="132" height="74" fill="url(#panel-cells)" rx="4" />
+                <rect x="146" y="176" width="132" height="74" fill="url(#panel-cells)" rx="4" />
+                <rect x="292" y="176" width="132" height="74" fill="url(#panel-cells)" rx="4" />
+              </g>
+
+              <!-- Arcos de energia: painéis → rede (animados de dia, pausados à noite) -->
+              <path class="energy-arc"        d="M 768 350 C 728 276 668 236 618 198" />
+              <path class="energy-arc arc--b" d="M 832 358 C 800 288 752 248 710 212" />
+              <path class="energy-arc arc--c" d="M 704 344 C 666 272 614 232 570 196" />
+            </svg>
+          </div>
+
+          <!-- Flash do easter egg do sol (clique) -->
+          <div class="hero__flash" id="hero-flash"></div>
+        </div>
+
+        <div class="container hero__content">
+          <!-- PLACEHOLDER: número real de projetos — confirmar com o cliente -->
+          <p class="hero__badge" data-reveal>
+            <svg class="icon" aria-hidden="true"><use href="#sym-check" /></svg>
+            +200 projetos instalados no Entorno do DF
+          </p>
+          <h1 class="hero__title" data-reveal>
+            Sua conta de luz pode ser menor a partir deste mês.
+          </h1>
+          <p class="hero__subtitle" data-reveal>
+            Projetos de energia solar sob medida para casas, comércios e propriedades rurais
+            no Entorno Sul do DF.
+          </p>
+          <div class="hero__cta" data-reveal>
+            <a class="btn btn--primary btn--lg" href="#simulacao">Quero minha simulação gratuita</a>
+            <a class="btn btn--ghost btn--lg" href="#como-funciona">Como funciona</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           2. NÚMEROS / PROVA SOCIAL
+           ================================================================== -->
+      <section class="section stats" aria-label="Energy Soluções em números">
+        <div class="container">
+          <dl class="stats__grid">
+            <!-- PLACEHOLDER: métricas reais — confirmar com o cliente -->
+            <div class="stat" data-reveal>
+              <dd class="stat__value">+200</dd>
+              <dt class="stat__label">projetos instalados</dt>
+            </div>
+            <div class="stat" data-reveal>
+              <dd class="stat__value">5 anos</dd>
+              <dt class="stat__label">de mercado desde 2021</dt>
+            </div>
+            <div class="stat" data-reveal>
+              <dd class="stat__value">até 90%</dd>
+              <dt class="stat__label">de economia na conta de luz</dt>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           3. CALCULADORA DE ECONOMIA (interativa, estilo Tesla)
+           ================================================================== -->
+      <section class="section calculator" id="calculadora">
+        <div class="container">
+          <p class="section__eyebrow" data-reveal>Calculadora</p>
+          <h2 class="section__title" data-reveal>Quanto você economizaria?</h2>
+          <p class="section__lead" data-reveal>
+            Arraste até o valor médio da sua conta de luz e veja a economia estimada com
+            energia solar.
+          </p>
+
+          <div class="calculator__card" data-reveal>
+            <div class="calculator__slider-row">
+              <label class="calculator__label" for="calc-slider">Minha conta mensal é de</label>
+              <output class="calculator__bill" id="calc-bill" for="calc-slider">R$&nbsp;350</output>
+            </div>
+            <input
+              type="range"
+              id="calc-slider"
+              min="100"
+              max="3000"
+              step="25"
+              value="350"
+              aria-label="Valor médio da conta de luz em reais"
+            />
+            <div class="calculator__scale" aria-hidden="true">
+              <span>R$ 100</span><span>R$ 3.000</span>
+            </div>
+
+            <div class="calculator__results">
+              <div class="calculator__result">
+                <span class="calculator__result-label">em 1 ano</span>
+                <strong class="calculator__result-value" data-calc-out="1">R$ 0</strong>
+              </div>
+              <div class="calculator__result">
+                <span class="calculator__result-label">em 5 anos</span>
+                <strong class="calculator__result-value" data-calc-out="5">R$ 0</strong>
+              </div>
+              <div class="calculator__result calculator__result--highlight">
+                <span class="calculator__result-label">em 25 anos</span>
+                <strong class="calculator__result-value" data-calc-out="25">R$ 0</strong>
+              </div>
+            </div>
+
+            <p class="calculator__note">
+              Estimativa com até 90% de economia. O valor exato depende do seu consumo e do
+              projeto — a simulação gratuita calcula tudo certinho.
+            </p>
+            <button class="btn btn--primary" id="calc-cta" type="button">
+              Quero essa economia
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           4. PARA QUEM É — cards com tilt 3D
+           ================================================================== -->
+      <section class="section profiles" id="para-quem">
+        <div class="container">
+          <p class="section__eyebrow" data-reveal>Para quem é</p>
+          <h2 class="section__title" data-reveal>Solar para o seu tipo de imóvel</h2>
+
+          <div class="profiles__grid">
+            <article class="profile-card" data-tilt data-reveal>
+              <span class="profile-card__icon">
+                <svg class="icon" aria-hidden="true"><use href="#sym-house" /></svg>
+              </span>
+              <h3>Residencial</h3>
+              <p>
+                A conta de luz subiu e não desce? Com um sistema dimensionado para a sua casa,
+                você gera a própria energia e paga só a taxa mínima da distribuidora.
+              </p>
+            </article>
+
+            <article class="profile-card" data-tilt data-reveal>
+              <span class="profile-card__icon">
+                <svg class="icon" aria-hidden="true"><use href="#sym-store" /></svg>
+              </span>
+              <h3>Comercial</h3>
+              <p>
+                Energia é um dos maiores custos fixos do seu negócio. Transforme essa despesa
+                em previsibilidade e use a economia para crescer.
+              </p>
+            </article>
+
+            <article class="profile-card" data-tilt data-reveal>
+              <span class="profile-card__icon">
+                <svg class="icon" aria-hidden="true"><use href="#sym-farm" /></svg>
+              </span>
+              <h3>Rural</h3>
+              <p>
+                Bombas, irrigação e refrigeração pesam no bolso. A energia solar garante
+                autonomia para a sua produção, mesmo longe da cidade.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           5. COMO FUNCIONA — 4 etapas
+           ================================================================== -->
+      <section class="section steps" id="como-funciona">
+        <div class="container">
+          <p class="section__eyebrow" data-reveal>Como funciona</p>
+          <h2 class="section__title" data-reveal>Da análise ao monitoramento, sem dor de cabeça</h2>
+
+          <ol class="steps__list">
+            <li class="step" data-reveal>
+              <span class="step__icon"><svg class="icon" aria-hidden="true"><use href="#sym-search" /></svg></span>
+              <h3>Análise</h3>
+              <p>Estudamos sua conta de luz e seu consumo real — sem compromisso.</p>
+            </li>
+            <li class="step" data-reveal>
+              <span class="step__icon"><svg class="icon" aria-hidden="true"><use href="#sym-draft" /></svg></span>
+              <h3>Projeto</h3>
+              <p>Dimensionamos o sistema ideal e cuidamos de toda a homologação.</p>
+            </li>
+            <li class="step" data-reveal>
+              <span class="step__icon"><svg class="icon" aria-hidden="true"><use href="#sym-tool" /></svg></span>
+              <h3>Instalação</h3>
+              <p>Equipe técnica própria, instalação limpa e dentro do prazo combinado.</p>
+            </li>
+            <li class="step" data-reveal>
+              <span class="step__icon"><svg class="icon" aria-hidden="true"><use href="#sym-chart" /></svg></span>
+              <h3>Monitoramento</h3>
+              <p>Acompanhamos a geração e seguimos por perto no pós-venda, com suporte humano.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           6. FORMULÁRIO DE SIMULAÇÃO
+           ================================================================== -->
+      <section class="section section--dark form-section" id="simulacao">
+        <div class="container form-section__inner">
+          <div class="form-section__copy">
+            <p class="section__eyebrow" data-reveal>Simulação gratuita</p>
+            <h2 class="section__title" data-reveal>
+              Descubra em minutos quanto dá para economizar
+            </h2>
+            <p class="section__lead" data-reveal>
+              Preencha e nossa equipe técnica monta a sua simulação personalizada — com
+              transparência e sem pressão.
+            </p>
+            <ul class="form-section__bullets" data-reveal>
+              <li><svg class="icon" aria-hidden="true"><use href="#sym-check" /></svg> Resposta rápida pelo WhatsApp</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#sym-check" /></svg> Análise feita por quem instala</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#sym-check" /></svg> Sem custo e sem compromisso</li>
+            </ul>
+          </div>
+
+          <form class="form" id="form-simulacao" novalidate data-reveal>
+            <div class="form__field">
+              <label for="f-nome">Nome*</label>
+              <input id="f-nome" name="nome" type="text" autocomplete="name" required />
+            </div>
+
+            <div class="form__field">
+              <label for="f-telefone">Telefone / WhatsApp*</label>
+              <input
+                id="f-telefone"
+                name="telefone"
+                type="tel"
+                inputmode="tel"
+                autocomplete="tel"
+                placeholder="(61) 99999-9999"
+                required
+              />
+            </div>
+
+            <div class="form__field">
+              <label for="f-email">Email <span class="form__optional">(opcional)</span></label>
+              <input id="f-email" name="email" type="email" autocomplete="email" />
+            </div>
+
+            <div class="form__field">
+              <label for="f-cidade">Cidade*</label>
+              <input
+                id="f-cidade"
+                name="cidade"
+                type="text"
+                autocomplete="address-level2"
+                placeholder="Ex.: Cidade Ocidental"
+                required
+              />
+            </div>
+
+            <div class="form__field">
+              <label for="f-tipo">Tipo de imóvel*</label>
+              <select id="f-tipo" name="tipo" required>
+                <option value="" selected disabled>Selecione</option>
+                <option value="residencial">Residencial</option>
+                <option value="comercial">Comercial</option>
+                <option value="rural">Rural</option>
+              </select>
+            </div>
+
+            <div class="form__field">
+              <label for="f-conta">Valor médio da conta de luz (R$)*</label>
+              <input
+                id="f-conta"
+                name="conta"
+                type="number"
+                inputmode="numeric"
+                min="1"
+                placeholder="Ex.: 350"
+                required
+              />
+            </div>
+
+            <!-- Honeypot anti-spam: humanos não veem nem preenchem este campo -->
+            <div class="form__hp" aria-hidden="true">
+              <label for="f-website">Não preencha este campo</label>
+              <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <button class="btn btn--primary btn--lg form__submit" type="submit">
+              Quero minha simulação gratuita
+            </button>
+
+            <p class="form__status" id="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           7. DEPOIMENTOS (PLACEHOLDER — cliente envia os reais)
+           ================================================================== -->
+      <section class="section testimonials" id="depoimentos">
+        <div class="container">
+          <p class="section__eyebrow" data-reveal>Depoimentos</p>
+          <h2 class="section__title" data-reveal>Quem já gera a própria energia</h2>
+
+          <div class="testimonials__grid">
+            <!-- PLACEHOLDER: substituir pelos depoimentos reais do cliente -->
+            <figure class="testimonial" data-reveal>
+              <blockquote>
+                “A conta veio R$ 38 no primeiro mês. Achei que era erro da distribuidora.”
+              </blockquote>
+              <figcaption>
+                <strong>Nome do cliente</strong>
+                <span>Cidade Ocidental · Residencial</span>
+              </figcaption>
+            </figure>
+
+            <figure class="testimonial" data-reveal>
+              <blockquote>
+                “O que mais me ganhou foi a clareza: explicaram tudo antes de fechar.”
+              </blockquote>
+              <figcaption>
+                <strong>Nome do cliente</strong>
+                <span>Valparaíso de Goiás · Comercial</span>
+              </figcaption>
+            </figure>
+
+            <figure class="testimonial" data-reveal>
+              <blockquote>
+                “Instalação rápida e o suporte responde de verdade quando preciso.”
+              </blockquote>
+              <figcaption>
+                <strong>Nome do cliente</strong>
+                <span>Luziânia · Rural</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           8. QUEM SOMOS
+           ================================================================== -->
+      <section class="section about" id="quem-somos">
+        <div class="container about__inner">
+          <div class="about__text">
+            <p class="section__eyebrow" data-reveal>Quem somos</p>
+            <h2 class="section__title" data-reveal>Energia solar com sotaque do Entorno</h2>
+            <p data-reveal>
+              A Energy Soluções nasceu em 2021, em Cidade Ocidental – GO, com uma missão
+              simples: levar energia solar de qualidade para o Entorno Sul do DF sem
+              enrolação e sem promessa milagrosa.
+            </p>
+            <p data-reveal>
+              Analisamos seu consumo, apresentamos o projeto ideal e explicamos tudo com
+              calma — do orçamento à homologação. A energia é solar. A decisão é sua.
+              <strong>A clareza é da Energy.</strong>
+            </p>
+          </div>
+          <!-- PLACEHOLDER: trocar pelo retrato real da equipe (ex.: <img src="/equipe.jpg">) -->
+          <div class="about__photo" data-parallax-soft data-reveal aria-hidden="true">
+            <svg class="about__photo-mark"><use href="#sym-sun" /></svg>
+            <span>Foto da equipe</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           9. CTA FINAL
+           ================================================================== -->
+      <section class="section cta-final">
+        <div class="container cta-final__inner">
+          <h2 data-reveal>O sol já nasce de graça.<br />Falta só ele pagar a sua conta.</h2>
+          <a class="btn btn--dark btn--lg" href="#simulacao" data-reveal>Começar minha simulação</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- ====================================================================
+         FOOTER
+         ==================================================================== -->
+    <footer class="footer">
+      <div class="container footer__inner">
+        <a class="logo logo--footer" href="#inicio" aria-label="Energy Soluções — voltar ao início">
+          <svg class="logo__mark" aria-hidden="true"><use href="#sym-sun" /></svg>
+          <span class="logo__text">Energy<small>Soluções</small></span>
+        </a>
+        <a
+          class="footer__social"
+          href="https://instagram.com/energy.sollucoes"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg class="icon" aria-hidden="true"><use href="#sym-instagram" /></svg>
+          @energy.sollucoes
+        </a>
+        <p class="footer__copy">
+          © 2026 Energy Soluções · Cidade Ocidental – GO · Entorno Sul do DF
+        </p>
+      </div>
+    </footer>
+
+    <!-- Botão flutuante de WhatsApp (aparece depois do hero; href definido no TS) -->
+    <a class="whatsapp-float" id="whatsapp-float" href="#" target="_blank" rel="noopener noreferrer" aria-label="Falar com a Energy Soluções no WhatsApp">
+      <svg class="icon" aria-hidden="true"><use href="#sym-whatsapp" /></svg>
+    </a>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
