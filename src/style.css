@@ -1213,7 +1213,63 @@ section[id] {
 }
 
 /* ============================================================================
-   10. REDUCED MOTION — respeita quem prefere menos animação
+   10. MOBILE EXCLUSIVO (max 767px) — correções de overflow e enquadramento
+   ========================================================================== */
+@media (max-width: 767px) {
+  /* html sem overflow-x: hidden permite scroll lateral no iOS Safari mesmo com
+     body contido — ambos precisam da regra para fechar o gap */
+  html,
+  body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  /* Painéis do hero: no mobile o parallax está desligado (parallax.ts line 27),
+     então o inset: -20% -10% (que existe só para esconder bordas durante o
+     movimento) é desnecessário e vaza 10vw para cada lado causando o overflow.
+     will-change: transform cria compositing layer que ignora overflow:hidden
+     do pai em alguns mobile browsers — removemos também. */
+  .hero__panel {
+    inset: 0;
+    will-change: auto;
+  }
+
+  /* Clip explícito na cena, defesa extra contra qualquer child que transborde */
+  .hero__scene {
+    overflow: hidden;
+  }
+
+  /* Header: logo cede espaço para que o toggle nunca saia da viewport */
+  .logo {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .logo__mark {
+    flex-shrink: 0;
+  }
+
+  .logo__text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .header__actions {
+    flex-shrink: 0;
+  }
+
+  /* Badge: inline-flex pode exceder o container em texto longo */
+  .hero__badge {
+    max-width: 100%;
+    white-space: normal;
+  }
+}
+
+/* ============================================================================
+   11. REDUCED MOTION — respeita quem prefere menos animação
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   html {
