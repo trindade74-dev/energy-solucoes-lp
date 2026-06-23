@@ -23,7 +23,7 @@ const errors = [];
 page.on('console', (msg) => msg.type() === 'error' && errors.push(msg.text()));
 page.on('pageerror', (err) => errors.push(String(err)));
 
-await page.goto('http://localhost:5173', { waitUntil: 'networkidle' });
+await page.goto('http://localhost:5174', { waitUntil: 'networkidle' });
 await page.waitForTimeout(1200); // fontes + reveal do hero
 
 // 1. Dia (tema claro) — topo
@@ -55,7 +55,7 @@ await page.screenshot({ path: 'screenshots/05-form-erros.png' });
 // 6. Mobile (375px) — hero dia
 const mobile = await browser.newPage({ viewport: { width: 375, height: 760 } });
 mobile.on('pageerror', (err) => errors.push('mobile: ' + String(err)));
-await mobile.goto('http://localhost:5173', { waitUntil: 'networkidle' });
+await mobile.goto('http://localhost:5174', { waitUntil: 'networkidle' });
 await mobile.waitForTimeout(1000);
 await mobile.screenshot({ path: 'screenshots/06-mobile-hero.png' });
 

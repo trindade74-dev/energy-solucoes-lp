@@ -39,7 +39,7 @@
   --text-stat: clamp(2.4rem, 5vw, 3.8rem);
 
   /* Espaçamento e forma */
-  --space-section: clamp(4.5rem, 10vw, 8rem);
+  --space-section: clamp(3rem, 10vw, 8rem);
   --container: 1120px;
   --radius-card: 14px;
   --radius-pill: 999px;
@@ -54,33 +54,21 @@
   --color-text-soft: #44546a;
   --color-border: #dde6ee;
 
-  /* Céu do hero — dia: azul claro descendo para âmbar no horizonte */
-  --sky: linear-gradient(180deg, #79bce8 0%, #a8d4f0 38%, #dcebf2 64%, #fbe3bc 100%);
-  --hero-text: #0a1628;
-  --hero-text-soft: #27405e;
-
-  /* Cena do hero — dia */
-  --hill-back: #4d8a66;
-  --hill-front: #356b4c;
-  --house-body: #fdf6ec;
-  --house-roof: #2b3d54;
-  --house-detail: #c9d6e2;
-  --panel: #1c3a5e;
-  --panel-line: #3d6ea5;
-  --led: #7ed957;
-  --star-opacity: 0;
-  --cloud-opacity: 0.85;
-  --sun-opacity: 1;
-  --moon-opacity: 0;
-  --flow-opacity: 1;
-  --charge-play: running;     /* animação de carga RODANDO de dia */
+  /* Hero — superfície de placa solar (sempre escuro) */
+  --panel-bg:    #0a1420;
+  --cell-line:   rgba(65, 120, 200, 0.32);
+  --cell-busbar: rgba(90, 150, 230, 0.18);
+  --cell-finger: rgba(55, 100, 180, 0.10);
+  --glow-color:  rgba(245, 130, 20, 0.18);  /* reflexo solar — dia */
+  --hero-text:      #e8f2ff;
+  --hero-text-soft: #8eb0d8;
 
   /* Sol do logo (pétalas) — padrão laranja/âmbar */
   --petal-a: var(--color-brand);
   --petal-b: var(--color-amber);
 }
 
-/* Cores do tema ESCURO (noite) — as placas param de carregar 🌙 */
+/* Cores do tema ESCURO (noite) 🌙 */
 [data-theme='dark'] {
   --color-bg: #0a1628;
   --color-surface: #11233d;
@@ -89,24 +77,13 @@
   --color-text-soft: #9fb2c8;
   --color-border: #243a58;
 
-  --sky: linear-gradient(180deg, #03070f 0%, #050d1a 45%, #0a1628 80%, #11233d 100%);
-  --hero-text: #e8f0f8;
-  --hero-text-soft: #9fb2c8;
-
-  --hill-back: #0e2438;
-  --hill-front: #081a2c;
-  --house-body: #1a2c44;
-  --house-roof: #0d1b2e;
-  --house-detail: #f5d98f;          /* janelas acesas à noite :) */
-  --panel: #13263d;
-  --panel-line: #1f3a5e;
-  --led: #5a6b80;                    /* LED apagado — sem geração à noite */
-  --star-opacity: 1;
-  --cloud-opacity: 0;
-  --sun-opacity: 0;
-  --moon-opacity: 1;
-  --flow-opacity: 0.12;              /* fluxo de energia quase some... */
-  --charge-play: paused;             /* ...e a animação de carga PAUSA */
+  --panel-bg:    #060d14;
+  --cell-line:   rgba(40, 80, 150, 0.25);
+  --cell-busbar: rgba(60, 100, 180, 0.14);
+  --cell-finger: rgba(35, 70, 130, 0.08);
+  --glow-color:  rgba(40, 80, 200, 0.14);   /* reflexo lunar — noite */
+  --hero-text:      #e8f2ff;
+  --hero-text-soft: #7aa0c8;
 }
 
 /* ============================================================================
@@ -333,6 +310,11 @@ section[id] {
   gap: 0.75rem;
 }
 
+/* CTA do header escondido em mobile — reaparece em telas maiores */
+.header__actions .btn {
+  display: none;
+}
+
 /* Logo: sol SVG + wordmark em texto */
 .logo {
   display: inline-flex;
@@ -415,14 +397,14 @@ section[id] {
 }
 
 /* ============================================================================
-   6. HERO — CENA DIA/NOITE
+   6. HERO — SUPERFÍCIE DE PLACA SOLAR
    ========================================================================== */
 .hero {
   position: relative;
   min-height: 100svh;
   display: flex;
   align-items: center;
-  background: var(--sky);
+  background: var(--panel-bg);
   color: var(--hero-text);
   overflow: hidden;
   transition: background var(--transition-theme);
@@ -434,223 +416,68 @@ section[id] {
   pointer-events: none;
 }
 
-.hero__layer {
+/* Camadas de grid solar — inset maior que o hero evita bordas visíveis no parallax */
+.hero__panel {
   position: absolute;
-  inset: 0;
+  inset: -20% -10%;
   will-change: transform;
-}
-
-.hero__layer svg {
-  width: 100%;
-  height: 100%;
-}
-
-/* --- Estrelas (noite) --- */
-.hero__layer--stars {
-  opacity: var(--star-opacity);
-  transition: opacity var(--transition-theme);
-}
-
-.star {
-  fill: #e8f0f8;
-  animation: star-twinkle var(--tw, 3s) ease-in-out infinite;
-}
-
-@keyframes star-twinkle {
-  0%,
-  100% {
-    opacity: 0.95;
-  }
-  50% {
-    opacity: 0.25;
-  }
-}
-
-/* Easter egg: clique na lua faz as estrelas piscarem juntas */
-.stars.is-blink .star {
-  animation: star-blink 0.9s ease-in-out;
-}
-
-@keyframes star-blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  25% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  75% {
-    opacity: 0;
-  }
-}
-
-/* --- Sol interativo / lua --- */
-.hero__layer--sun {
-  inset: auto;
-  /* no mobile fica menor e mais alto para não brigar com o headline */
-  top: 9%;
-  left: 3%;
-  width: clamp(72px, 16vw, 190px);
-  height: clamp(72px, 16vw, 190px);
-}
-
-.hero-sun {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  pointer-events: auto;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.hero-sun:focus-visible {
-  outline: none;
-}
-
-.hero-sun__glow {
-  position: absolute;
-  inset: -42%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(245, 166, 35, 0.5) 0%, rgba(245, 166, 35, 0) 65%);
-  opacity: var(--sun-opacity);
-  transition: opacity var(--transition-theme), transform 0.5s ease;
-}
-
-.hero-sun__svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  transition: opacity var(--transition-theme), transform var(--transition-theme);
-}
-
-.hero-sun__svg--sun {
-  opacity: var(--sun-opacity);
-  animation: sun-breathe 5s ease-in-out infinite;
-}
-
-.hero-sun__svg--moon {
-  opacity: var(--moon-opacity);
-  color: #e8f0f8;
-  padding: 16%;
-  filter: drop-shadow(0 0 14px rgba(232, 240, 248, 0.35));
-}
-
-@keyframes sun-breathe {
-  0%, 100% { filter: drop-shadow(0 0 10px rgba(245, 166, 35, 0.45)); }
-  50%       { filter: drop-shadow(0 0 30px rgba(245, 166, 35, 0.85)); }
-}
-
-/* Burst do easter egg (clique no sol) */
-.hero-sun.is-burst .hero-sun__svg--sun {
-  animation: sun-breathe 5s ease-in-out infinite, sun-burst 0.7s ease;
-}
-
-.hero-sun.is-burst .hero-sun__glow {
-  transform: scale(1.7);
-}
-
-@keyframes sun-burst {
-  0% {
-    scale: 1;
-  }
-  40% {
-    scale: 1.22;
-  }
-  100% {
-    scale: 1;
-  }
-}
-
-/* Flash de luz na cena quando o sol é clicado */
-.hero__flash {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 18% 26%, rgba(255, 232, 180, 0.9), rgba(255, 232, 180, 0) 60%);
-  opacity: 0;
   pointer-events: none;
 }
 
-.hero__flash.is-flashing {
-  animation: hero-flash 0.65s ease-out;
+/* Far: grade principal de células FV (backbone da placa) */
+.hero__panel--far {
+  background-image:
+    linear-gradient(var(--cell-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--cell-line) 1px, transparent 1px);
+  background-size: 88px 52px;
 }
 
-@keyframes hero-flash {
-  0% {
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+/* Mid: busbars — linhas de coleta mais espessas, 3× o tamanho de célula */
+.hero__panel--mid {
+  background-image:
+    linear-gradient(var(--cell-busbar) 2px, transparent 2px),
+    linear-gradient(90deg, var(--cell-busbar) 1.5px, transparent 1.5px);
+  background-size: 264px 156px;
 }
 
-/* --- Horizonte: plano de chão + array de painéis --- */
-.hero__layer--horizon {
-  inset: auto 0 0 0;
-  height: clamp(280px, 46vh, 460px);
+/* Near: fingers — linhas muito finas e densas, horizontais */
+.hero__panel--near {
+  background-image:
+    linear-gradient(var(--cell-finger) 1px, transparent 1px);
+  background-size: 88px 8.7px;
 }
 
-.ground {
-  fill: var(--hill-front);
-  transition: fill var(--transition-theme);
+/* Reflexo de luz sobre a superfície — âmbar de dia, azul à noite */
+.hero__glow {
+  position: absolute;
+  width: clamp(500px, 90vw, 1100px);
+  aspect-ratio: 1;
+  top: -45%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--glow-color) 0%, transparent 65%);
+  pointer-events: none;
+  animation: glow-breathe 8s ease-in-out infinite;
+  transition: background var(--transition-theme);
 }
 
-/* Array de painéis solares — brilho "carregando" de dia, apagado à noite */
-.solar-panel {
-  fill: var(--panel);
-  stroke: var(--panel-line);
-  stroke-width: 1.2;
-  transition: fill var(--transition-theme);
-  animation: panel-charge 2.8s ease-in-out infinite;
-  animation-play-state: var(--charge-play);
-}
-
-[data-theme='dark'] .solar-panel {
-  animation: none;
-  filter: none;
-}
-
-@keyframes panel-charge {
-  0%, 100% { filter: drop-shadow(0 0 3px rgba(245, 166, 35, 0.2)); }
-  50%       { filter: drop-shadow(0 0 14px rgba(245, 166, 35, 0.7)); }
-}
-
-/* Arcos de energia (painéis → rede elétrica): pausam à noite */
-.energy-arc {
-  fill: none;
-  stroke: var(--color-amber);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-dasharray: 6 16;
-  opacity: var(--flow-opacity);
-  transition: opacity var(--transition-theme);
-  animation: arc-flow 2s linear infinite;
-  animation-play-state: var(--charge-play);
-}
-
-.arc--b { animation-delay: -0.66s; }
-.arc--c { animation-delay: -1.33s; }
-
-@keyframes arc-flow {
-  to { stroke-dashoffset: -22; }
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.8; transform: translateX(-50%) scale(1); }
+  50%       { opacity: 1;   transform: translateX(-50%) scale(1.1); }
 }
 
 /* --- Conteúdo do hero --- */
 .hero__content {
   position: relative;
   z-index: 2;
-  text-align: center;
+  text-align: center;          /* mobile: centralizado */
   padding-top: 5.5rem;
-  padding-bottom: clamp(200px, 30vh, 320px);
+  padding-bottom: 4rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center;         /* mobile: centralizado */
+  max-width: 680px;
 }
 
 .hero__badge {
@@ -661,8 +488,8 @@ section[id] {
   font-size: 0.85rem;
   font-weight: 600;
   border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--color-bg) 55%, transparent);
-  border: 1px solid color-mix(in srgb, var(--hero-text) 18%, transparent);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(232, 242, 255, 0.18);
   backdrop-filter: blur(6px);
   margin-bottom: 1.5rem;
 }
@@ -682,15 +509,20 @@ section[id] {
 .hero__subtitle {
   font-size: var(--text-lead);
   color: var(--hero-text-soft);
-  max-width: 46ch;
+  max-width: 42ch;
   margin-bottom: 2rem;
 }
 
 .hero__cta {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;      /* mobile: botões empilhados */
+  align-items: stretch;        /* mobile: largura total */
   gap: 0.9rem;
+  width: 100%;
+}
+
+.hero__cta .btn {
+  justify-content: center;
 }
 
 /* ============================================================================
@@ -1150,7 +982,7 @@ section[id] {
   position: relative;
   display: grid;
   place-items: center;
-  min-height: 320px;
+  min-height: 200px;           /* mobile: mais compacto */
   border-radius: var(--radius-card);
   background: linear-gradient(145deg, var(--color-surface-2), var(--color-surface));
   border: 2px dashed var(--color-border);
@@ -1276,6 +1108,33 @@ section[id] {
     padding-inline: 2rem;
   }
 
+  /* CTA do header visível a partir de 768px */
+  .header__actions .btn {
+    display: inline-flex;
+  }
+
+  /* Hero: texto e botões alinhados à esquerda no desktop */
+  .hero__content {
+    text-align: left;
+    align-items: flex-start;
+    padding-bottom: 5rem;
+  }
+
+  .hero__cta {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: auto;
+  }
+
+  .hero__cta .btn {
+    justify-content: initial;
+  }
+
+  .about__photo {
+    min-height: 320px;
+  }
+
   .stats__grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -1332,12 +1191,6 @@ section[id] {
     grid-template-columns: 1.1fr 1fr;
   }
 
-  .hero__layer--sun {
-    left: 6%;
-    top: 12%;
-    width: 170px;
-    height: 170px;
-  }
 }
 
 /* ============================================================================

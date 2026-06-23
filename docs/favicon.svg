@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Favicon: sol do logo Energy Soluções sobre o quadrado laranja da marca -->
+  <rect width="64" height="64" rx="12" fill="#F15A29"/>
+  <g transform="translate(32 32)">
+    <circle r="7" fill="#FFFFFF"/>
+    <!-- 8 pétalas/raios em pinwheel, alternando branco e âmbar claro -->
+    <g fill="#FFFFFF">
+      <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z"/>
+      <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z" transform="rotate(90)"/>
+      <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z" transform="rotate(180)"/>
+      <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z" transform="rotate(270)"/>
+    </g>
+    <g fill="#FFD9A0">
+      <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z" transform="rotate(45)"/>
+      <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z" transform="rotate(135)"/>
+      <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z" transform="rotate(225)"/>
+      <path d="M2 -9 Q 6 -19 15 -23 Q 14 -12 6 -7 Z" transform="rotate(315)"/>
+    </g>
+  </g>
+</svg>
