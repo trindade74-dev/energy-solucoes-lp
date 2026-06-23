@@ -308,6 +308,7 @@ section[id] {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex-shrink: 0;  /* toggle nunca some por overflow do logo */
 }
 
 /* CTA do header escondido em mobile — reaparece em telas maiores */
@@ -322,6 +323,8 @@ section[id] {
   gap: 0.6rem;
   text-decoration: none;
   color: var(--hero-text);
+  min-width: 0;           /* permite encolher no flex do header */
+  overflow: hidden;
 }
 
 .header--scrolled .logo {
@@ -336,9 +339,12 @@ section[id] {
 .logo__text {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 1.3rem;
+  font-size: 1.05rem;     /* mobile: menor para caber ao lado do toggle */
   line-height: 1;
   letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .logo__text small {
@@ -452,7 +458,7 @@ section[id] {
   position: absolute;
   width: clamp(500px, 90vw, 1100px);
   aspect-ratio: 1;
-  top: -45%;
+  top: -10%;              /* mobile: centro do glow visível no terço superior do hero */
   left: 50%;
   transform: translateX(-50%);
   border-radius: 50%;
@@ -485,13 +491,16 @@ section[id] {
   align-items: center;
   gap: 0.5rem;
   padding: 0.45rem 1.1rem;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(232, 242, 255, 0.18);
   backdrop-filter: blur(6px);
   margin-bottom: 1.5rem;
+  max-width: 100%;        /* não ultrapassa o container no mobile */
+  flex-wrap: wrap;        /* texto quebra em vez de estourar */
+  justify-content: center;
 }
 
 .hero__badge .icon {
@@ -1111,6 +1120,16 @@ section[id] {
   /* CTA do header visível a partir de 768px */
   .header__actions .btn {
     display: inline-flex;
+  }
+
+  /* Wordmark maior no desktop */
+  .logo__text {
+    font-size: 1.3rem;
+  }
+
+  /* Glow: posição alta para entrar vindo de cima como num desktop */
+  .hero__glow {
+    top: -45%;
   }
 
   /* Hero: texto e botões alinhados à esquerda no desktop */
