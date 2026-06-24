@@ -1261,9 +1261,55 @@ section[id] {
     flex-shrink: 0;
   }
 
-  /* Badge: inline-flex pode exceder o container em texto longo */
+  /* Badge: ícone e texto ficam na mesma linha — flex-wrap:wrap os separava em linhas */
   .hero__badge {
     max-width: 100%;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+  }
+
+  /* Ícone do badge nunca reduz; texto ocupa o restante e quebra linha normalmente */
+  .hero__badge .icon {
+    flex-shrink: 0;
+    margin-top: 0.08em;
+  }
+
+  /* Calculadora: min-width:0 evita que itens de grid/flex ultrapassem o container */
+  .calculator__card {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .calculator__result {
+    min-width: 0;
+  }
+
+  .calculator__result-value {
+    overflow-wrap: break-word;
+  }
+
+  /* Formulário de simulação: containment em todos os filhos */
+  .form-section__inner {
+    overflow: hidden;
+  }
+
+  .form {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .form__field {
+    min-width: 0;
+  }
+
+  .form__field input,
+  .form__field select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Botão de submit: permite quebra de texto em telas muito estreitas */
+  .form__submit {
     white-space: normal;
   }
 }
